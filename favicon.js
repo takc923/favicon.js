@@ -25,13 +25,19 @@
         newLink.type = "image/x-icon";
         newLink.rel = "icon";
         newLink.href = iconUrl;
-        removeLinkIfExists();
-        head.appendChild(newLink);
+        if (changeLinkIfExists(iconUrl) == false)
+            head.appendChild(newLink);
     };
-    var removeLinkIfExists = function() {
+    var changeLinkIfExists = function(iconUrl) {
         var links = head.getElementsByTagName("link");
-        var l = links.length;
-        for (; --l >= 0; /\bicon\b/i.test(links[l].getAttribute("rel")) && head.removeChild(links[l])) {}
+        var flag = false;
+        for (var key in links) {
+            if (links[key].rel != undefined && links[key].rel.search(/^\s*(shortcut\s+)?icon(\s+shortcut)?\s*$/) != -1) {
+                links[key].href = iconUrl;
+                flag = true;
+            }
+        }
+        return flag;
     };
 
     /*\
